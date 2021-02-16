@@ -93,3 +93,26 @@ bucket = storage_client.bucket(BUCKET_NAME1)
 
 blob = bucket.blob('air.csv')
 blob.download_to_filename(destination_file_name)
+
+
+
+# upload Local to BigQuery(case1)
+from google.cloud import bigquery
+
+PROJECT_ID = 'tpcg-298808'
+client = bigquery.Client(project=PROJECT_ID)
+
+table_ref = client.dataset("terry").table("bae")
+
+job_config = bigquery.LoadJobConfig()
+job_config.source_format = bigquery.SourceFormat.CSV
+job_config.skip_leading_rows = 1 # ignore the header
+job_config.autodetect = True
+
+with open("player_info_write.csv", "rb") as source_file:
+    job = client.load_table_from_file(
+        source_file, table_ref, job_config=job_config
+    )
+
+# job is async operation so we have to wait for it to finish
+job.result()
