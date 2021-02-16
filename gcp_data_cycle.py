@@ -79,3 +79,17 @@ load_job.result()  # Waits for the job to complete.
 
 destination_table = client.get_table(table_id)  # Make an API request.
 print("Loaded {} rows.".format(destination_table.num_rows))
+
+# 버킷에서 로컬 디렉토리로 1.txt 파일로 파일 전송
+from google.cloud import storage
+PROJECT_ID = 'tpcg-298808'
+BUCKET_NAME = 'tpcg-jh'
+BUCKET_NAME1 = 'tpcg-jh2'
+storage_client = storage.Client(PROJECT_ID)
+dst_bucket = storage_client.bucket(BUCKET_NAME1)
+destination_file_name = 'C:/Users/jhbae/Downloads/air.csv'
+
+bucket = storage_client.bucket(BUCKET_NAME1)
+
+blob = bucket.blob('air.csv')
+blob.download_to_filename(destination_file_name)
